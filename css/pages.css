@@ -1,6 +1,10 @@
+/* ════════════════════════════════════════════════════════════════════
+   pages.css — Case Studies, Views, & Section Styles
+   Consolidated from index.html for high performance & caching
+   ════════════════════════════════════════════════════════════════════ */
 
-
-    /* ════ HERO — Figma node 1:27 (1440×1024, pinned; next section scrolls over it) ════ */
+/* ── Section Style Block 1 ── */
+/* ════ HERO — Figma node 1:27 (1440×1024, pinned; next section scrolls over it) ════ */
     .hero {
       position: sticky;
       top: 0;
@@ -2645,12 +2649,9 @@
       .pgf-card { transition: opacity .3s ease, filter .3s ease; }
       .pgf-lightbox, .pgf-caption > * { transition: opacity .3s ease; }
     }
-  
 
-/* ===================================== */
-
-
-    #hatcha-view { --cs-serif:'DM Serif Display', Georgia, serif;
+/* ── Section Style Block 2 ── */
+#hatcha-view { --cs-serif:'DM Serif Display', Georgia, serif;
                    --cs-sans:'Space Grotesk', sans-serif;
                    --cs-cream:#fff9f1; --cs-black:#000; --cs-ink:#0b0b0b;
                    --cs-coral:#fc9073;
@@ -3646,12 +3647,9 @@
        two words ("Beta – 30k waitlist, releasing 2026") wraps to three lines
        against a half-empty neighbour. One row per item reads cleanly instead. */
     html.cs-static .cs-meta { grid-template-columns:1fr; gap:26px 0; }
-  
 
-/* ===================================== */
-
-
-    #fireflut-view { --cs-serif:'DM Serif Display', Georgia, serif;
+/* ── Section Style Block 3 ── */
+#fireflut-view { --cs-serif:'DM Serif Display', Georgia, serif;
                      --cs-sans:'Space Grotesk', sans-serif;
                      --cs-cream:#fff9f1; --cs-black:#000; --cs-ink:#0b0b0b;
                      --cs-coral:#4A9EFF;
@@ -5280,12 +5278,9 @@
        content-height sliver. The two .cs-ph thumbnails stay hidden (desktop-
        grid artwork, no mobile crop exists) so the centred kicker + heading
        fills the space alone. */
-  
 
-/* ===================================== */
-
-
-    /* ═══════════════ Work / Jumpable case study (routed via #jumpable) ═══════════════
+/* ── Section Style Block 4 ── */
+/* ═══════════════ Work / Jumpable case study (routed via #jumpable) ═══════════════
        Cover-slide 100vh panels + editorial ledger (the Existence/Fireflut model). Accent
        is a single CHROMA brand hue — the app moved from a rainbow palette to one primary
        colour, so the accent carries that story. Scoped tokens + scoped ledger/stage CSS. */
@@ -5635,4 +5630,4 @@
        now matches the nav-aware recipe used on the other three case studies
        (var(--cs-navpad) top / var(--cs-pad) sides+bottom) instead of the old
        flat 96px, now that the section is flex-centred full height. */
-  
+

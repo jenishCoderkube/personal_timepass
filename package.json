@@ -1,11 +1,11 @@
 {
-  "name": "zainabkabira-hero",
+  "name": "jenish-sabhadiya-portfolio",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "sync-content": "node -e \"const fs=require('fs'); const j=fs.readFileSync('data/siteContent.json','utf8'); fs.writeFileSync('data/siteContent.js', '/* ── Auto-generated from siteContent.json ── */\\nwindow.SITE_CONTENT = ' + j + ';\\n'); console.log('Synced siteContent.json -> data/siteContent.js');\""
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",

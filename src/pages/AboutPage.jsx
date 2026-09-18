@@ -13,7 +13,7 @@ export default function AboutPage() {
   return (
     <div className="about-page-view">
       {/* Intro section */}
-      <section className="about-intro" aria-label="About Zainab Kabira">
+      <section className="about-intro" aria-label="About Jenish Sabhadiya">
         <div className="about-intro-stage">
           <div className="ai-scene" id="ai-scene">
             <img className="ai-sun-clouds" src="/assets/about-sun-clouds.png" alt="" aria-hidden="true" />

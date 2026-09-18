@@ -122,7 +122,7 @@
       letter-spacing: -0.64px;
     }
 
-    /* Back button — replaces "VANCOUVER, BC" on case-study routes; returns to the
+    /* Back button — replaces location on case-study routes; returns to the
        home projects section (/#work). Colour is inherited from .nav-side, so it
        follows the same backdrop-contrast rules as the rest of the nav. */
     .nav-back {
@@ -249,10 +249,12 @@
       outline-offset: 3px;
     }
     .nav-avatar img {
-      position: absolute;
-      width: 100%; height: 149.98%;
-      top: -5.8%; left: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
+      object-position: center;
+      display: block;
+      border-radius: 999px;
     }
 
     /* avatar + music-wave button share a tight 4px group (Figma node 594:6228) */
@@ -1339,7 +1341,7 @@
 /* ── responsive: nav + footer chrome (page rules stay in each page) ── */
 @media (max-width: 1100px) {
       #nav { padding: 16px 20px 0; }
-      .nav-side { display: none; }              /* VANCOUVER, BC */
+      .nav-side { display: none; }              /* location */
       .nav-side.right { display: flex; width: auto; }
       /* case studies keep the left side, but only for the Back button */
       body.route-hatcha .nav-side,

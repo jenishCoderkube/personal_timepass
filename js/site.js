@@ -9,11 +9,287 @@
      <site-nav></site-nav>
        … page content …
      <site-footer></site-footer>
-     <script src="js/site.js" defer></script>
-   Keep that 1-line inline theme guard inline per page (must run before first paint).
+      <script src="js/site.js" defer></script>
    ════════════════════════════════════════════════════════════════════════ */
 
-const NAV_HTML = `
+function getContent() {
+  return window.SITE_CONTENT || {};
+}
+
+function applySiteContent() {
+  const c = getContent();
+  if (!c || Object.keys(c).length === 0) return;
+
+  // 1. Meta / SEO
+  if (c.meta) {
+    if (c.meta.title) document.title = c.meta.title;
+    if (c.meta.description) {
+      const md = document.querySelector('meta[name="description"]');
+      if (md) md.setAttribute('content', c.meta.description);
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', c.meta.description);
+      const twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc) twDesc.setAttribute('content', c.meta.description);
+    }
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle && c.meta.title) ogTitle.setAttribute('content', c.meta.title);
+    const twTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twTitle && c.meta.title) twTitle.setAttribute('content', c.meta.title);
+  }
+
+  // 2. Personal sr-only
+  if (c.personal) {
+    const sr = document.querySelector('h1 .sr-only');
+    if (sr) {
+      sr.textContent = `${c.personal.name || 'Jenish Sabhadiya'}, ${c.personal.role || 'MERN Stack Developer'} in ${c.personal.location || 'Bangalore, India'} — `;
+    }
+  }
+
+  // 3. Hero Section
+  if (c.hero) {
+    const eyebrow = document.querySelector('.hero-eyebrow');
+    if (eyebrow && c.hero.eyebrow) {
+      const dot = eyebrow.querySelector('img');
+      eyebrow.textContent = '';
+      if (dot) eyebrow.appendChild(dot);
+      eyebrow.appendChild(document.createTextNode(' ' + c.hero.eyebrow));
+    }
+    const vertical = document.querySelector('.hero-vertical');
+    if (vertical && c.hero.verticalTag) {
+      vertical.textContent = c.hero.verticalTag;
+    }
+    const headline1 = document.querySelector('.h-line.multidisciplinary');
+    if (headline1 && c.hero.headline && c.hero.headline.line1) {
+      headline1.textContent = '';
+      for (const ch of c.hero.headline.line1) {
+        const span = document.createElement('span');
+        span.className = ch === ' ' ? 'h-letter h-space' : 'h-letter';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        headline1.appendChild(span);
+      }
+    }
+    const recTitle = document.querySelector('.rec-title');
+    if (recTitle && (c.hero.audioTitle || (c.nav && c.nav.audio && c.nav.audio.title))) {
+      recTitle.textContent = c.hero.audioTitle || c.nav.audio.title;
+    }
+  }
+
+  // 4. Story Section
+  if (c.story && c.story.introParagraphs && c.story.introParagraphs.length) {
+    const introPs = document.querySelectorAll('#story .intro-copy .intro-type');
+    c.story.introParagraphs.forEach((para, idx) => {
+      if (introPs[idx]) {
+        introPs[idx].dataset.twText = para;
+        introPs[idx].innerHTML = para;
+      }
+    });
+  }
+
+  // 5. Featured Heading / Clients
+  if (c.clients && c.clients.heading) {
+    const h = document.querySelector('.featured-heading');
+    if (h) h.textContent = c.clients.heading;
+  }
+
+  // 6. Featured Project Tiles
+  if (c.featuredProjects && c.featuredProjects.length) {
+    const tiles = document.querySelectorAll('.project-tiles .project-tile');
+    c.featuredProjects.forEach((proj, idx) => {
+      if (tiles[idx]) {
+        const t = tiles[idx].querySelector('.tile-overlay-title');
+        const s = tiles[idx].querySelector('.tile-overlay-subtitle');
+        if (t && proj.title) t.textContent = proj.title;
+        if (s && proj.subtitle) s.innerHTML = proj.subtitle;
+        if (proj.link) tiles[idx].href = proj.link;
+      }
+    });
+  }
+
+  // 7. Testimonials
+  if (c.testimonials) {
+    const tEyebrow = document.querySelector('.t-eyebrow');
+    if (tEyebrow && c.testimonials.eyebrow) tEyebrow.textContent = c.testimonials.eyebrow;
+
+    const tHeading = document.querySelector('.t-heading');
+    if (tHeading && c.testimonials.heading) tHeading.textContent = c.testimonials.heading;
+
+    if (c.testimonials.items && c.testimonials.items.length) {
+      const cards = document.querySelectorAll('.t-cards .t-card');
+      c.testimonials.items.forEach((item, idx) => {
+        if (cards[idx]) {
+          const q = cards[idx].querySelector('.t-quote');
+          const n = cards[idx].querySelector('.t-name');
+          const r = cards[idx].querySelector('.t-role');
+          const av = cards[idx].querySelector('.t-avatar');
+          if (q && item.quote) q.textContent = item.quote;
+          if (n && item.author) n.textContent = item.author;
+          if (r && item.role) r.textContent = item.role;
+          if (av && item.avatar) av.src = item.avatar;
+          if (av && item.author) av.alt = item.author;
+        }
+      });
+    }
+  }
+
+  // 8. About View
+  if (c.about) {
+    const aboutView = document.getElementById('about-view');
+    if (aboutView) {
+      if (c.about.intro) {
+        const aiH = aboutView.querySelector('.ai-heading');
+        if (aiH && c.about.intro.heading) aiH.textContent = c.about.intro.heading;
+
+        if (c.about.intro.body && c.about.intro.body.length) {
+          const aiBody = aboutView.querySelector('.ai-body');
+          if (aiBody) {
+            const ps = aiBody.querySelectorAll('p');
+            c.about.intro.body.forEach((para, idx) => {
+              if (ps[idx]) ps[idx].innerHTML = para;
+            });
+          }
+        }
+      }
+
+      const aexpLabel = aboutView.querySelector('.aexp-label');
+      if (aexpLabel && (c.about.experienceLabel || 'Professional Experience')) {
+        aexpLabel.textContent = c.about.experienceLabel || 'Professional Experience';
+      }
+
+      if (c.about.experience && c.about.experience.length) {
+        const expItems = aboutView.querySelectorAll('.aexp-list .aexp-item');
+        c.about.experience.forEach((exp, idx) => {
+          if (expItems[idx]) {
+            const nameEl = expItems[idx].querySelector('.aexp-name');
+            const roleEl = expItems[idx].querySelector('.aexp-role');
+            const dateEl = expItems[idx].querySelector('.aexp-date');
+            if (nameEl && exp.company) nameEl.textContent = exp.company;
+            if (roleEl && exp.role) roleEl.textContent = exp.role;
+            if (dateEl && exp.date) dateEl.textContent = exp.date;
+
+            const panelInner = expItems[idx].querySelector('.aexp-panel-inner');
+            if (panelInner) {
+              const pOverview = panelInner.querySelector('p');
+              if (pOverview && exp.overview) pOverview.textContent = exp.overview;
+              const ulBullets = panelInner.querySelector('.aexp-bullets');
+              if (ulBullets && exp.bullets && exp.bullets.length) {
+                ulBullets.innerHTML = exp.bullets.map(b => `<li>${b}</li>`).join('');
+              }
+            }
+          }
+        });
+      }
+
+      if (c.about.funFacts) {
+        const ff = c.about.funFacts;
+        if (ff.todo && ff.todo.length) {
+          const todoRows = aboutView.querySelectorAll('.ff-wk-list .r .t');
+          ff.todo.forEach((td, idx) => {
+            if (todoRows[idx]) todoRows[idx].textContent = td;
+          });
+        }
+        if (ff.music) {
+          const mA = aboutView.querySelector('.ff-gully-pill .meta .a');
+          const mB = aboutView.querySelector('.ff-gully-pill .meta .b');
+          const mLink = aboutView.querySelector('.ff-gully-link');
+          if (mA && ff.music.song) mA.innerHTML = ff.music.song;
+          if (mB && ff.music.artist) mB.textContent = ff.music.artist;
+          if (mLink && ff.music.youtubeUrl) mLink.href = ff.music.youtubeUrl;
+        }
+        if (ff.quote) {
+          const qCite = aboutView.querySelector('.ff-quote-cite');
+          if (qCite && ff.quote.author) qCite.textContent = '– ' + ff.quote.author;
+        }
+        if (ff.blog) {
+          const bTitle = aboutView.querySelector('.ff-blog-title');
+          const bLink = aboutView.querySelector('.ff-blog-link');
+          if (bTitle && ff.blog.title) bTitle.textContent = ff.blog.title;
+          if (bLink && ff.blog.url) bLink.href = ff.blog.url;
+        }
+        if (ff.game) {
+          const gK = aboutView.querySelector('.ff-starry-panel .k');
+          const gT = aboutView.querySelector('.ff-starry-panel .t');
+          const gLink = aboutView.querySelector('.ff-starry-link');
+          if (gK && ff.game.label) gK.textContent = ff.game.label;
+          if (gT && ff.game.title) gT.textContent = ff.game.title;
+          if (gLink && ff.game.url) gLink.href = ff.game.url;
+        }
+      }
+    }
+  }
+
+  // 9. Playground Lead
+  if (c.playgroundLead) {
+    const pgLead = document.querySelector('.pgf-lead');
+    if (pgLead) pgLead.textContent = c.playgroundLead;
+  }
+
+  // 10. Case Studies
+  if (c.caseStudies) {
+    Object.keys(c.caseStudies).forEach(csId => {
+      const cs = c.caseStudies[csId];
+      const csView = document.getElementById(csId + '-view');
+      if (csView && cs) {
+        const h = csView.querySelector('.cs-hero-h');
+        const tagline = csView.querySelector('.cs-hero-tagline');
+        if (h && cs.title) h.textContent = cs.title;
+        if (tagline && cs.tagline) tagline.textContent = cs.tagline;
+
+        if (cs.intro && cs.intro.length) {
+          const intros = csView.querySelectorAll('.cs-hero-intro');
+          cs.intro.forEach((inText, idx) => {
+            if (intros[idx]) intros[idx].textContent = inText;
+          });
+        }
+
+        if (cs.meta) {
+          const metaVals = csView.querySelectorAll('.cs-meta .cs-meta-v');
+          if (metaVals.length >= 4) {
+            if (cs.meta.role) metaVals[0].textContent = cs.meta.role;
+            if (cs.meta.client) metaVals[1].textContent = cs.meta.client;
+            if (cs.meta.shipped) metaVals[2].textContent = cs.meta.shipped;
+            if (cs.meta.platform) metaVals[3].textContent = cs.meta.platform;
+          }
+        }
+      }
+    });
+  }
+}
+
+window.applySiteContent = applySiteContent;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', applySiteContent);
+} else {
+  applySiteContent();
+}
+
+if (typeof fetch === 'function' && typeof location !== 'undefined' && location.protocol.startsWith('http')) {
+  fetch('/data/siteContent.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (data && typeof data === 'object') {
+        window.SITE_CONTENT = Object.assign(window.SITE_CONTENT || {}, data);
+        applySiteContent();
+      }
+    })
+    .catch(() => {});
+}
+
+function getNavHTML() {
+  const c = getContent();
+  const p = c.personal || {};
+  const n = c.nav || {};
+  const loc = p.location || 'BANGLORE,\u00A0IN';
+  const name = p.name || 'Jenish Sabhadiya';
+  const avatar = p.avatar || '/assets/jenish_avatar.jpg';
+  const links = n.links || [
+    { label: 'Work', path: '/#work' },
+    { label: 'About', path: '/about' },
+    { label: 'Playground', path: '/playground' }
+  ];
+  const linksHtml = links.map(l => `<a href="${l.path}" class="nav-link">${l.label}</a>`).join('\n        ');
+
+  return `
   <nav id="nav">
     <div class="nav-side">
       <a href="/#work" class="nav-back" aria-label="Back to work">
@@ -22,14 +298,14 @@ const NAV_HTML = `
         </svg>
         <span>Back</span>
       </a>
-      <img class="pin" src="/assets/imgVector.svg" alt="" width="14" height="20">
-      <span class="nav-loc">VANCOUVER,&nbsp;BC</span>
+      <img class="pin" src="${p.pinIcon || '/assets/imgVector.svg'}" alt="" width="14" height="20">
+      <span class="nav-loc">${loc}</span>
     </div>
 
     <div class="nav-pill" id="nav-pill">
       <div class="nav-id">
-        <a class="nav-avatar" href="/#work" aria-label="Zainab Kabira — home">
-          <img src="/assets/imgProfilePicture.jpg" alt="">
+        <a class="nav-avatar" href="/#work" aria-label="${name} — home">
+          <img src="${avatar}" alt="${name}">
         </a>
       </div>
       <div class="avail-tag" aria-hidden="true">
@@ -37,9 +313,7 @@ const NAV_HTML = `
       </div>
       <span class="avail-dot" aria-hidden="true"></span>
       <div class="nav-links" id="nav-links-group">
-        <a href="/#work" class="nav-link">Work</a>
-        <a href="/about" class="nav-link">About</a>
-        <a href="/playground" class="nav-link">Playground</a>
+        ${linksHtml}
         <a href="/#contact" class="nav-cta" data-contact-open>
           <img src="/assets/imgEmail.svg" alt="" width="24" height="24">
           Work with me
@@ -77,47 +351,134 @@ const NAV_HTML = `
         </svg>
       </button>
     </div>
-`;
+  </nav>`;
+}
 
-const MENU_HTML = `
+function getMenuHTML() {
+  const c = getContent();
+  const p = c.personal || {};
+  const n = c.nav || {};
+  const loc = p.location || 'BANGLORE, IN';
+  const links = n.links || [
+    { label: 'Work', path: '/#work' },
+    { label: 'About', path: '/about' },
+    { label: 'Playground', path: '/playground' }
+  ];
+  const linksHtml = links.map((l, i) => `<li><a href="${l.path}" class="menu-link"><span class="num">0${i + 1}</span><span class="word">${l.label}</span></a></li>`).join('\n        ');
+
+  return `
   <div class="menu-overlay" id="menu-overlay" role="dialog" aria-modal="true" aria-label="Menu">
     <button class="menu-close" id="menu-close" aria-label="Close menu"></button>
     <nav>
       <ul class="menu-links">
-        <li><a href="/#work" class="menu-link"><span class="num">01</span><span class="word">Work</span></a></li>
-        <li><a href="/about" class="menu-link"><span class="num">02</span><span class="word">About</span></a></li>
-        <li><a href="/playground" class="menu-link"><span class="num">03</span><span class="word">Playground</span></a></li>
+        ${linksHtml}
       </ul>
     </nav>
-    <p class="menu-footer">VANCOUVER, BC</p>
-  </div>
-`;
+    <p class="menu-footer">${loc}</p>
+  </div>`;
+}
 
-const FOOTER_HTML = `
+function getFooterHTML() {
+  const c = getContent();
+  const f = c.footer || {};
+  const p = c.personal || {};
+  const soc = p.social || {};
+
+  const heading = f.heading || 'Let’s build your next web app';
+  const sub = f.sub || 'With 4 years of MERN stack expertise, I help ambitious teams engineer robust full-stack applications that scale, perform, and drive growth.';
+  const credit = f.credit || f.copyright || 'Engineered by Jenish Sabhadiya · Bangalore, India @2026';
+
+  let socHtml = '';
+  if (soc.linkedin) socHtml += `<a href="${soc.linkedin}" target="_blank" rel="noopener">LinkedIn</a>\n      `;
+  if (soc.github) socHtml += `<a href="${soc.github}" target="_blank" rel="noopener">GitHub</a>\n      `;
+  if (soc.behance) socHtml += `<a href="${soc.behance}" target="_blank" rel="noopener">Behance</a>`;
+
+  return `
   <footer class="footer" id="contact">
-    <!-- crest is a masked block (see .ft-wavy in site.css) — NOT an inline stretched
-         SVG, which iOS Safari flattens to a straight line during the pinned scroll -->
     <div class="ft-wavy" aria-hidden="true"></div>
-    <!-- the land bleeds wider than the footer; clip it in its OWN wrapper so the footer
-         itself can keep overflow:visible (needed so the crest poke isn't cut on iOS) -->
     <div class="ft-land-clip" aria-hidden="true"><img class="ft-land" src="/assets/footer-land.png" alt=""></div>
     <div class="ft-garden" aria-hidden="true"></div>
 
     <div class="ft-inner">
-      <p class="ft-sub reveal">From early concepts to refined experiences, I help ambitious teams build products that earn trust, move quickly, and drive growth.</p>
-      <h2 class="ft-head"><button class="ft-head-btn" type="button" data-contact-open>Let’s grow your next idea</button></h2>
+      <p class="ft-sub reveal">${sub}</p>
+      <h2 class="ft-head"><button class="ft-head-btn" type="button" data-contact-open>${heading}</button></h2>
     </div>
 
-    <p class="ft-credit">Designed by Zainab Kabira · Vancouver, Canada @2026</p>
+    <p class="ft-credit">${credit}</p>
     <nav class="ft-social" aria-label="Social links">
-      <a href="https://www.linkedin.com/in/zainabkabira/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/Zainabvkabira" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.behance.net/zainab_kabira" target="_blank" rel="noopener">Behance</a>
+      ${socHtml}
     </nav>
-  </footer>
-`;
+  </footer>`;
+}
 
-const CONTACT_EMAIL = 'zainabvkabira@gmail.com';
+function getContactHTML() {
+  const c = getContent();
+  const ct = c.contact || {};
+  const p = c.personal || {};
+  const soc = p.social || {};
+  const email = ct.email || p.email || 'sabhadiyajenish83@gmail.com';
+  const badge = ct.badge || 'AVAILABLE FOR NEW PROJECTS';
+  const title = ct.title || 'Build together?';
+  const intro = ct.intro || "Tell me what you're building — a full-stack MERN application, a responsive React dashboard, or an API service. I'll write back within 48 hours.";
+  const errMsg = ct.errorMessage || "Hmm, that didn't send. Email me directly at";
+
+  let socHtml = '';
+  if (soc.linkedin) socHtml += `<a href="${soc.linkedin}" target="_blank" rel="noopener">LinkedIn&nbsp;↗</a>\n        `;
+  if (soc.github) socHtml += `<a href="${soc.github}" target="_blank" rel="noopener">GitHub&nbsp;↗</a>\n        `;
+  if (soc.behance) socHtml += `<a href="${soc.behance}" target="_blank" rel="noopener">Behance&nbsp;↗</a>`;
+
+  return `
+  <div class="contact-scrim" id="contact-scrim"></div>
+  <aside class="contact-drawer" id="contact-drawer" role="dialog" aria-modal="true" aria-labelledby="cd-title">
+    <button class="cd-close" id="cd-close" aria-label="Close contact panel"></button>
+
+    <div class="cd-body">
+      <p class="cd-eyebrow"><span class="cd-dot" aria-hidden="true"></span>${badge}</p>
+      <h2 class="cd-title" id="cd-title">${title}</h2>
+      <p class="cd-intro">${intro}</p>
+
+      <form class="cd-form" id="cd-form">
+        <input type="text" name="_honey" class="cd-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="cd-fields">
+          <div class="cd-field">
+            <label class="cd-label" for="cd-name">YOUR NAME</label>
+            <input class="cd-input" id="cd-name" name="name" type="text" required placeholder="Jane Appleseed" autocomplete="name">
+          </div>
+          <div class="cd-field">
+            <label class="cd-label" for="cd-email">EMAIL</label>
+            <input class="cd-input" id="cd-email" name="email" type="email" required placeholder="you@company.com" autocomplete="email">
+          </div>
+          <div class="cd-field">
+            <label class="cd-label" for="cd-msg">WHAT ARE WE MAKING?</label>
+            <textarea class="cd-input cd-textarea" id="cd-msg" name="message" rows="3" required placeholder="A few lines about your project, timeline, or budget"></textarea>
+          </div>
+        </div>
+        <button class="cd-send" type="submit">
+          <span class="cd-send-label">Send it over</span>
+          <img src="/assets/imgEmail.svg" alt="" width="20" height="20">
+        </button>
+        <p class="cd-error" hidden>${errMsg} <a href="mailto:${email}">${email}</a>.</p>
+      </form>
+
+      <div class="cd-done" hidden>
+        ${daisySVG()}
+        <h3 class="cd-done-title">${ct.successTitle || 'Planted!'}</h3>
+        <p class="cd-done-copy">${ct.successSubtitle || "Your note is on its way. I'll write back within 48 hours."}</p>
+      </div>
+    </div>
+
+    <div class="cd-alt">
+      <svg class="cd-wavy" viewBox="0 0 1440 198" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 4.15182L46.4 23.4471C91.2 42.7424 175.3 94.0468 266.5 74.7515C359.3 55.4562 446.5 33.4304 548.8 33.4304C651.1 33.4304 731.2 68.4695 822.4 94.1965C913.6 119.924 1006.4 65.6287 1097.6 65.6287C1188.8 65.6287 1280 119.924 1371.2 87.7648C1462.4 55.6059 1553.6 29.8789 1646.4 10.5836C1739.2 -8.71166 1828.8 -1.41153 1873.6 30.7473L1920 57.5792V197.105H1873.6C1828.8 197.105 1737.6 197.105 1646.4 197.105C1553.6 197.105 1462.4 197.105 1371.2 197.105C1280 197.105 1188.8 197.105 1097.6 197.105C1006.4 197.105 913.6 197.105 822.4 197.105C731.2 197.105 640 197.105 548.8 197.105C457.6 197.105 366.4 197.105 273.6 197.105C182.4 197.105 91.2 197.105 46.4 197.105H0V4.15182Z"/>
+      </svg>
+      <p class="cd-alt-label">NOT A FAN OF FORMS?</p>
+      <a class="cd-alt-mail" href="mailto:${email}">${email}</a>
+      <nav class="cd-alt-social" aria-label="Social links">
+        ${socHtml}
+      </nav>
+    </div>
+  </aside>`;
+}
 
 /* contact drawer — opened by [data-contact-open] (nav CTA + footer headline).
    Daisy petals are generated in JS so the SVG stays readable. */
@@ -139,63 +500,6 @@ function daisySVG() {
     </g>
   </svg>`;
 }
-
-const CONTACT_HTML = `
-  <div class="contact-scrim" id="contact-scrim"></div>
-  <aside class="contact-drawer" id="contact-drawer" role="dialog" aria-modal="true" aria-labelledby="cd-title">
-    <button class="cd-close" id="cd-close" aria-label="Close contact panel"></button>
-
-    <div class="cd-body">
-      <p class="cd-eyebrow"><span class="cd-dot" aria-hidden="true"></span>AVAILABLE FOR NEW PROJECTS</p>
-      <h2 class="cd-title" id="cd-title">Grow together?</h2>
-      <p class="cd-intro">Tell me what you're growing — a product, a brand, a wild idea. I'll write back within 48 hours.</p>
-
-      <form class="cd-form" id="cd-form">
-        <input type="text" name="_honey" class="cd-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <!-- the three inputs are one block, not three loose rows — the wrapper owns
-             the in-group rhythm so it can stay tighter than the gaps around it -->
-        <div class="cd-fields">
-          <div class="cd-field">
-            <label class="cd-label" for="cd-name">YOUR NAME</label>
-            <input class="cd-input" id="cd-name" name="name" type="text" required placeholder="Jane Appleseed" autocomplete="name">
-          </div>
-          <div class="cd-field">
-            <label class="cd-label" for="cd-email">EMAIL</label>
-            <input class="cd-input" id="cd-email" name="email" type="email" required placeholder="you@company.com" autocomplete="email">
-          </div>
-          <div class="cd-field">
-            <label class="cd-label" for="cd-msg">WHAT ARE WE MAKING?</label>
-            <textarea class="cd-input cd-textarea" id="cd-msg" name="message" rows="3" required placeholder="A few lines about your project, timeline, or budget"></textarea>
-          </div>
-        </div>
-        <button class="cd-send" type="submit">
-          <span class="cd-send-label">Send it over</span>
-          <img src="/assets/imgEmail.svg" alt="" width="20" height="20">
-        </button>
-        <p class="cd-error" hidden>Hmm, that didn't send. Email me directly at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>
-      </form>
-
-      <div class="cd-done" hidden>
-        ${daisySVG()}
-        <h3 class="cd-done-title">Planted!</h3>
-        <p class="cd-done-copy">Your note is on its way. I'll write back within 48 hours.</p>
-      </div>
-    </div>
-
-    <div class="cd-alt">
-      <svg class="cd-wavy" viewBox="0 0 1440 198" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 4.15182L46.4 23.4471C91.2 42.7424 175.3 94.0468 266.5 74.7515C359.3 55.4562 446.5 33.4304 548.8 33.4304C651.1 33.4304 731.2 68.4695 822.4 94.1965C913.6 119.924 1006.4 65.6287 1097.6 65.6287C1188.8 65.6287 1280 119.924 1371.2 87.7648C1462.4 55.6059 1553.6 29.8789 1646.4 10.5836C1739.2 -8.71166 1828.8 -1.41153 1873.6 30.7473L1920 57.5792V197.105H1873.6C1828.8 197.105 1737.6 197.105 1646.4 197.105C1553.6 197.105 1462.4 197.105 1371.2 197.105C1280 197.105 1188.8 197.105 1097.6 197.105C1006.4 197.105 913.6 197.105 822.4 197.105C731.2 197.105 640 197.105 548.8 197.105C457.6 197.105 366.4 197.105 273.6 197.105C182.4 197.105 91.2 197.105 46.4 197.105H0V4.15182Z"/>
-      </svg>
-      <p class="cd-alt-label">NOT A FAN OF FORMS?</p>
-      <a class="cd-alt-mail" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
-      <nav class="cd-alt-social" aria-label="Social links">
-        <a href="https://www.linkedin.com/in/zainabkabira/" target="_blank" rel="noopener">LinkedIn&nbsp;↗</a>
-        <a href="https://github.com/Zainabvkabira" target="_blank" rel="noopener">GitHub&nbsp;↗</a>
-        <a href="https://www.behance.net/zainab_kabira" target="_blank" rel="noopener">Behance&nbsp;↗</a>
-      </nav>
-    </div>
-  </aside>
-`;
 
 function initContact() {
   const drawer   = document.getElementById('contact-drawer');
@@ -254,7 +558,9 @@ function initContact() {
     sendBtn.disabled = true;
     sendLbl.textContent = 'Sending…';
     try {
-      const res = await fetch('https://formsubmit.co/ajax/' + CONTACT_EMAIL, {
+      const c = getContent();
+      const targetEmail = (c.contact && c.contact.email) || (c.personal && c.personal.email) || 'sabhadiyajenish83@gmail.com';
+      const res = await fetch('https://formsubmit.co/ajax/' + targetEmail, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({
@@ -1030,7 +1336,7 @@ window.pageLoader = pageLoader;
 
 class SiteNav extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = NAV_HTML + MENU_HTML + CONTACT_HTML;
+    this.innerHTML = getNavHTML() + getMenuHTML() + getContactHTML();
     initTheme();
     initNavScroll();
     initNavContrast();
@@ -1042,7 +1348,7 @@ class SiteNav extends HTMLElement {
 }
 class SiteFooter extends HTMLElement {
   connectedCallback() {
-    this.innerHTML = FOOTER_HTML;
+    this.innerHTML = getFooterHTML();
     initFooterGrow();
     initGarden();
     initReveal(this);

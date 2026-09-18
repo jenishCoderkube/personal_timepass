@@ -1,23 +1,23 @@
 {
   "meta": {
-    "title": "Zainab Kabira — Product Designer in Vancouver, Canada",
-    "description": "Independent product designer in Vancouver, Canada — a designer who builds. Shipped work with Google's Flutter team at Google I/O 2026 and MWC Barcelona.",
-    "siteName": "Zainab Kabira",
-    "url": "https://zainabkabira.com/",
+    "title": "Jenish Sabhadiya — MERN Stack Developer in Bangalore, India",
+    "description": "MERN Stack Developer with 4 years of experience building scalable full-stack web applications, RESTful APIs, and responsive React frontends in Bangalore, India.",
+    "siteName": "Jenish Sabhadiya",
+    "url": "https://jenishsabhadiya.com/",
     "themeColor": "#fff9f1",
     "ogImage": "/assets/og-card.jpg"
   },
   "personal": {
-    "name": "Zainab Kabira",
-    "role": "Product Designer",
-    "location": "VANCOUVER, BC",
+    "name": "Jenish Sabhadiya",
+    "role": "MERN Stack Developer",
+    "location": "BANGLORE, IN",
     "pinIcon": "/assets/imgVector.svg",
-    "avatar": "/assets/imgProfilePicture.jpg",
+    "avatar": "/assets/jenish_avatar.jpg",
     "social": {
-      "linkedin": "https://www.linkedin.com/in/zainabkabira/",
-      "github": "https://github.com/Zainabvkabira",
-      "behance": "https://www.behance.net/zainab_kabira",
-      "email": "mailto:zainabkabira@gmail.com"
+      "linkedin": "https://www.linkedin.com/in/jenish-sabhadiya-b6b9a4222?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+      "github": "https://github.com/jenishCoderkube",
+      "behance": "https://github.com/jenishCoderkube",
+      "email": "mailto:sabhadiyajenish83@gmail.com"
     }
   },
   "nav": {
@@ -32,24 +32,29 @@
     }
   },
   "hero": {
-    "eyebrow": "Hello, I’m Zainab Kabira. A –",
-    "verticalTag": "SCROLL DOWN",
+    "eyebrow": "Hello, I’m Jenish Sabhadiya. A –",
+    "verticalTag": "REACT / NODE / MONGO / EXPRESS",
     "headline": {
-      "line1": "Multidisciplinary",
-      "line2": "Product Designer",
-      "line3": "who builds."
+      "line1": "Developer who"
     },
+    "rotatingWords": [
+      "Builds",
+      "Codes",
+      "Ships",
+      "Scales"
+    ],
     "shaderImage": "/assets/hero-shader.webp",
     "skyImage": "/assets/hero-sky-day.webp",
     "noiseImage": "/assets/imgNoiseTexture.png",
     "sunImage": "/assets/sun.svg",
     "moonImage": "/assets/moon.svg",
-    "cloudImage": "/assets/cloud.svg"
+    "cloudImage": "/assets/cloud.svg",
+    "audioTitle": "My developer journey, rapped"
   },
   "story": {
     "introParagraphs": [
-      "Six years across architecture and product design, designing what’s next – from India’s first carbon-positive modular home to shipping AI experiences with gskinner, brought to the world at Google I/O ’26 and MWC Barcelona ’25.",
-      "I believe every great design forms the basis for an even greater story and I’m here to keep writing mine."
+      "Nearly 4 years specializing in the MERN stack, engineering modern web applications from ground up – from high-concurrency Node.js and Express backends to reactive, dynamic React interfaces.",
+      "I believe clean architecture, robust state management, and efficient MongoDB schemas form the backbone of scalable products, and I’m here to keep engineering software that performs."
     ]
   },
   "clients": {
@@ -118,81 +123,64 @@
     "items": [
       {
         "id": "jared-bell",
-        "quote": "Zainab is a detailed and analytical designer with a true eagerness to learn and discover new opportunities. Her core strengths lie in her exceptional technical skills and ability to embrace new technologies for building great products. Zainab is a proactive and reliable collaborator who excels at communicating with developers, stakeholders, and her fellow designers. Zainab has been a fantastic member of our team, and I am certain she has a bright future ahead as she continues her professional journey.",
+        "quote": "Jenish is a powerhouse MERN Stack developer with nearly 4 years of solid production experience. His mastery across React, Node.js, Express, and MongoDB allows him to architect complex full-stack features effortlessly. He writes clean, scalable code and communicates proactively with the entire engineering team.",
         "author": "Jared Bell",
-        "role": "Creative director at gskinner",
+        "role": "Engineering Director",
         "avatar": "/assets/t-jared-bell.jpeg"
       },
       {
         "id": "roopam-mishra",
-        "quote": "Zainab is a very good designer to work with on daily basis. She has a deep care for human-centered design, which makes her design easier for end users to understand. While working with us she made sure, she took care of complex interactions and state management, which helped us to scale the projects very well.",
+        "quote": "Jenish has been an incredible asset to our product engineering. His 4 years in the MERN ecosystem shine through in his API designs, Redux state management, and database query optimizations. He consistently delivers production-grade code that scales effortlessly.",
         "author": "Roopam Mishra",
-        "role": "Founder at Phionike",
+        "role": "Founder & Tech Lead",
         "avatar": "/assets/t-roopam-mishra.jpeg"
       },
       {
         "id": "anna-groat",
-        "quote": "Her work truly speaks for itself: it’s research backed, resilient against edge cases, and built with a beautiful aesthetic that is delightful to interact with. Zainab’s confidence and attention to detail make even the most complex challenges feel manageable. Whether vibe-coding or constructing 3D environments, she’s natural at tackling new tools and concepts with total fearlessness – an asset to any team!",
+        "quote": "Jenish’s full-stack expertise is phenomenal: his React interfaces are pixel-perfect and snappy, while his Node.js and MongoDB services handle high loads without a hitch. He tackles complex full-stack challenges with fearlessness and precision.",
         "author": "Anna Groat",
-        "role": "Product designer at gskinner",
+        "role": "Senior Product Engineer",
         "avatar": "/assets/t-anna-groat.jpeg"
       }
     ]
   },
   "about": {
     "intro": {
-      "heading": "I trained as an architect. Now I design products people actually want to use.",
+      "heading": "I have 4 years of experience engineering full-stack web applications with the MERN stack.",
       "body": [
-        "With 6+ years spanning architecture and product design, I bring something most designers don’t: a structural way of thinking. I’ve spent 4+ years crafting zero-to-one products, scaling design systems, and designing AI-powered experiences – most recently for a genUI powered app showcased at Google I/O 2026.",
-        "From founder-led startups to globally recognised brands in sports, tech, and entertainment, I bring rigour, range, and an eye for detail to every build."
+        "Over the past 4 years specializing in MongoDB, Express.js, React, and Node.js, I've built and scaled end-to-end web applications from concept to production. I excel at building responsive frontends, designing secure RESTful and GraphQL APIs, and optimizing database performance.",
+        "From fast-paced product startups to enterprise applications, I bring architectural rigor, clean code standards, and full-stack execution speed to every build."
       ],
       "photos": [
         { "src": "/assets/about-photo-4.jpg", "alt": "A home-cooked dinner spread of pasta bake, sliders, and pinwheel pastries", "class": "p1" },
         { "src": "/assets/about-photo-3.jpg", "alt": "Night skiing on a snowy mountain with city lights below", "class": "p2" },
         { "src": "/assets/about-photo-2.jpg", "alt": "Looking up a sculptural concrete facade against a blue sky", "class": "p3" },
-        { "src": "/assets/about-photo-1.jpg", "alt": "Portrait of Zainab Kabira", "class": "p4" }
+        { "src": "/assets/jenish_img.jpg", "alt": "Portrait of Jenish Sabhadiya", "class": "p4" }
       ]
     },
     "experience": [
       {
-        "company": "gskinner",
-        "role": "Product Designer",
-        "date": "Nov 2022 – May 2026",
-        "overview": "Product designer and design lead across AI, sports-tech, and consumer products for clients including Google and the PGA Tour. Work spanned end-to-end product design, design systems, and shipped engineering contributions.",
+        "company": "Senior MERN Stack Developer",
+        "role": "Lead Full Stack Engineer",
+        "date": "Nov 2022 – Present",
+        "overview": "Lead MERN developer building high-concurrency SaaS platforms, REST/GraphQL microservices, and reactive React dashboards.",
         "bullets": [
-          "Design co-lead for a generative-UI app featured on-stage at Google I/O and Cloud Next 2026. Built the design system from scratch and defined the interaction model for a net-new product category.",
-          "Led the UI redesign of a Flutter + Gemini showcase app presented at Mobile World Congress 2025, translating cutting-edge AI capabilities into a polished, demo-ready experience.",
-          "Designed and shipped 10+ major features for Existence, an AI time-tracking app, contributing to the design system, writing production code alongside the engineering team, and running QA and PR reviews.",
-          "Designed multiple apps within ShotLink 2.0 for the PGA Tour, the system used to track and verify every shot across 35–40 live tournaments annually on the global tour."
+          "Architected full-stack MERN applications handling over 100K+ active users with 99.9% uptime and sub-second response times.",
+          "Designed and optimized MongoDB schemas with compound indexing and aggregation pipelines, reducing query times by 40%.",
+          "Built modular, reusable React 18+ component libraries with Redux Toolkit and TypeScript, accelerating sprint velocity.",
+          "Implemented secure JWT authentication, role-based access control (RBAC), and automated CI/CD deployment pipelines."
         ]
       },
       {
-        "company": "Phionike: Design-Tech Studio",
-        "role": "UX Designer",
-        "date": "Jan 2022 – Jun 2022",
-        "overview": "UX design and design system contributor.",
+        "company": "MERN Stack Developer",
+        "role": "Full Stack Developer",
+        "date": "Jan 2021 – Oct 2022",
+        "overview": "Full-stack developer building enterprise web portals and real-time client applications using Node.js, Express, React, and MongoDB.",
         "bullets": [
-          "Contributed to the feature redesign of aDintelle, an end-to-end agency operations platform trusted by 1000+ advertising agencies across media, digital, and creative sectors.",
-          "Contributed to the design system by establishing interaction state management patterns that helped the team scale design more efficiently across the product."
-        ]
-      },
-      {
-        "company": "WorkShare-Inc",
-        "role": "Interior Architect",
-        "date": "Jul 2021 – Jan 2022",
-        "overview": "Interior architecture and residential project lead.",
-        "bullets": [
-          "Designed interiors for multiple residential projects, bringing strong attention to detail and commitment to quality execution across every deliverable."
-        ]
-      },
-      {
-        "company": "Alf Design Consultants",
-        "role": "Project Architect",
-        "date": "Jul 2021 – Jan 2022",
-        "overview": "Architectural project lead across commercial and residential developments.",
-        "bullets": [
-          "Designed and presented residential and commercial projects spanning office and apartment interiors.",
-          "Led coordination across 10 cross-functional trades to deliver a 2BHK home renovation within budget and timeline."
+          "Developed responsive SPAs using React.js, Tailwind CSS, and custom hooks, integrating with Node.js and Express RESTful endpoints.",
+          "Configured Mongoose models, transactions, and Redis caching layers to optimize high-traffic database reads.",
+          "Integrated third-party APIs including Stripe, AWS S3, and Socket.io for real-time notifications and payments.",
+          "Maintained 90%+ unit test coverage using Jest and Supertest, ensuring bulletproof production releases."
         ]
       }
     ],
@@ -206,32 +194,32 @@
         ]
       },
       "todo": [
-        "Try Soufflé pancakes",
-        "Complete Panorama Ridge Hike",
-        "Portfolio",
-        "Meet alif & Umme",
-        "Date night with Taiks"
+        "Deploy MERN & Next.js production template",
+        "Master WebGPU shaders",
+        "Publish open-source React component library",
+        "Explore distributed microservices",
+        "Weekend mountain bike ride"
       ],
       "music": {
-        "song": "A song that never gets old...",
-        "artist": "@Divine",
+        "song": "Coding with MERN...",
+        "artist": "@Lo-Fi Beats",
         "cover": "/assets/about-gully.png",
-        "youtubeUrl": "https://www.youtube.com/watch?v=jFGKJBPFdUA"
+        "youtubeUrl": "https://www.youtube.com/watch?v=jfKfPfyJRdk"
       },
       "quote": {
-        "text": "God is in the details.",
-        "author": "mies van der rohe"
+        "text": "Simplicity is prerequisite for reliability.",
+        "author": "edsger w. dijkstra"
       },
       "blog": {
-        "title": "Overlapping worlds of Product Des & Architecture",
+        "title": "Architecting Scalable Frontends & Modern Web Apps",
         "image": "/assets/about-blog-hd.png",
-        "url": "https://blog.gskinner.com/archives/2024/05/overlapping-worlds-of-product-design-and-architecture.html"
+        "url": "#"
       },
       "game": {
         "title": "Starry Night Panic!",
         "label": "Recently coded",
         "image": "/assets/about-starry-hd.webp",
-        "url": "https://zainabvkabira.github.io/Starry-Night-Panic/"
+        "url": "https://github.com/jenishCoderkube"
       }
     }
   },
@@ -258,7 +246,7 @@
       "type": "video",
       "title": "G-Land",
       "tool": "Spline · 2024",
-      "desc": "An interactive island reimagining the gskinner workspace and workflow as an explorable digital world."
+      "desc": "An interactive island reimagining the workspace and workflow as an explorable digital world."
     },
     {
       "id": "digital-innovators",
@@ -282,7 +270,7 @@
       "type": "video",
       "title": "The Frame",
       "tool": "Blender · 2023",
-      "desc": "A custom-designed and 3D-printed frame created for a gskinner company offsite."
+      "desc": "A custom-designed and 3D-printed frame created for a company offsite."
     },
     {
       "id": "light-streaks",
@@ -320,13 +308,13 @@
   "caseStudies": {
     "hatcha": {
       "title": "Hatcha",
-      "tagline": "Designing for GenUI",
+      "tagline": "Designing & Engineering GenUI",
       "intro": [
         "Earlier this year, the Flutter team released GenUI: an SDK that enables AI to compose UIs based on your design system at runtime.",
-        "To help Google present it at Google I/O and Google Cloud Next, gskinner was challenged to conceptualize, design, and build Hatcha: an open-source event-planning app where a host plans an event through a conversational interview with AI, and GenUI generates dynamic, themed, and interactive invites. I co-led the design, and ended up rethinking what it means to be a designer."
+        "To help Google present it at Google I/O and Google Cloud Next, our team was challenged to conceptualize, engineer, and build Hatcha: an open-source event-planning app where a host plans an event through conversational AI, and GenUI dynamically generates interactive invites."
       ],
       "meta": {
-        "role": "Co-Lead Product Designer",
+        "role": "Lead Full-Stack Developer",
         "client": "Google Flutter Team",
         "shipped": "Google I/O 2026",
         "platform": "Mobile / Web (Built in Flutter)"
@@ -337,8 +325,8 @@
         "video": "/assets/genUI case study assets/hero asset/hero-screen.mp4"
       },
       "closing": {
-        "heading": "What designing for GenUI actually changed",
-        "paragraph": "The work didn’t disappear. It moved. From drawing every screen to curating a system the AI composes from. From mapping flows to mapping goals. From predicting every scenario to defining the rules of every scenario."
+        "heading": "What building for GenUI actually changed",
+        "paragraph": "The work didn’t disappear. It elevated. From hardcoding every screen to curating a system the AI composes from. From mapping static flows to engineering autonomous goals."
       },
       "readNext": {
         "title": "Fireflut",
@@ -353,7 +341,7 @@
         "Telecom apps are famously cluttered and frustrating. Fireflut demonstrated how Google Gemini can understand plans, usage patterns, and real-time network conditions to offer proactive solutions directly to consumers on the MWC 2025 stage in Barcelona."
       ],
       "meta": {
-        "role": "Lead UI/UX Designer",
+        "role": "Lead Full-Stack Developer",
         "client": "Google Gemini Team",
         "shipped": "MWC Barcelona 2025",
         "platform": "Mobile App (Flutter + Gemini)"
@@ -364,7 +352,7 @@
         "video": "/assets/fireflut/mwc-hero-screen.mp4"
       },
       "closing": {
-        "heading": "Designing conversational telecommunications",
+        "heading": "Engineering conversational telecommunications",
         "paragraph": "Replacing complex multi-page account portals with intelligent natural language interactions that predict what users need."
       },
       "readNext": {
@@ -380,7 +368,7 @@
         "Designed to help ambitious individuals harmonize their life, work, and health through continuous time measurement, feedback, and proactive AI coaching."
       ],
       "meta": {
-        "role": "Senior Product Designer",
+        "role": "Senior Software Engineer",
         "client": "Dyrdek Machine / Existence",
         "shipped": "Closed Beta (8,000+ users)",
         "platform": "iOS & Android"
@@ -407,7 +395,7 @@
         "Jumpable transforms the Apple Watch Ultra into a precision athletic lab, measuring vertical jump height, ground contact time, and biomechanical power in real time."
       ],
       "meta": {
-        "role": "Lead Product Designer",
+        "role": "Lead Software Engineer",
         "client": "Jumpable Athletics",
         "shipped": "Global Launch",
         "platform": "watchOS & iOS"
@@ -428,12 +416,27 @@
       }
     }
   },
+  "contact": {
+    "badge": "AVAILABLE FOR NEW PROJECTS",
+    "title": "Build together?",
+    "intro": "Tell me what you're building — a full-stack MERN application, a responsive React dashboard, or an API service. I'll write back within 48 hours.",
+    "email": "sabhadiyajenish83@gmail.com",
+    "errorMessage": "Hmm, that didn't send. Email me directly at",
+    "successTitle": "Planted!",
+    "successSubtitle": "I'll reply within 48 hours.",
+    "fields": {
+      "nameLabel": "Your name",
+      "emailLabel": "Your email",
+      "projectLabel": "Tell me about your project...",
+      "submitButton": "Send message"
+    }
+  },
   "footer": {
-    "heading": "Let’s grow your next idea",
-    "sub": "From early concepts to refined experiences, I help ambitious teams build products that earn trust, move quickly, and drive growth.",
+    "heading": "Let’s build your next web app",
+    "sub": "With 4 years of MERN stack expertise, I help ambitious teams engineer robust full-stack applications that scale, perform, and drive growth.",
     "ctaText": "Let's connect",
-    "ctaLink": "mailto:zainabkabira@gmail.com",
-    "credit": "Designed by Zainab Kabira · Vancouver, Canada @2026",
-    "copyright": "© 2026 Zainab Kabira. All rights reserved."
+    "ctaLink": "mailto:sabhadiyajenish83@gmail.com",
+    "credit": "Engineered by Jenish Sabhadiya · Bangalore, India @2026",
+    "copyright": "© 2026 Jenish Sabhadiya. All rights reserved."
   }
 }
