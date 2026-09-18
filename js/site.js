@@ -619,12 +619,13 @@ function initGarden() {
       </filter></defs></svg>`;
       footer.appendChild(defs);
 
-      // ---- ridge profile: sample where the land begins per x, so plants root ON it ----
+      // ---- ridge profiles: day and night sample arrays so plants always root even before decode ----
+      const NIGHT_PROF = [0.869,0.45,0.45,0.45,0.407,0.409,0.413,0.421,0.438,0.448,0.455,0.462,0.466,0.45,0.471,0.475,0.482,0.495,0.45,0.45,0.45,0.45,0.419,0.45,0.45,0.45,0.45,0.45,0.45,0.354,0.45,0.45,0.45,0.45,0.45,0.305,0.312,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.37,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45];
+      const DAY_PROF = [0.468,0.47,0.475,0.48,0.49,0.515,0.532,0.544,0.552,0.562,0.567,0.569,0.574,0.579,0.586,0.601,0.613,0.594,0.567,0.534,0.507,0.49,0.495,0.483,0.448,0.421,0.419,0.404,0.389,0.382,0.394,0.379,0.36,0.34,0.32,0.305,0.3,0.313,0.318,0.318,0.315,0.313,0.31,0.305,0.303,0.298,0.291,0.283,0.273,0.266,0.259,0.254,0.254,0.288,0.323,0.355,0.384,0.411,0.404,0.379,0.35,0.318,0.283,0.251,0.224,0.204,0.19,0.175,0.163,0.15,0.14,0.133];
       const landImg = footer.querySelector('.ft-land');
-      let ridgeProf = null, nightProf = null, landTop = 0, landH = 0, landW = 0, footerW = 0;
-      // requireDark: day art needs the dark-soil check (skips its cream ridge
-      // outline); the night art's band starts with teal/purple over transparent
-      // sky, so opacity alone marks its top edge.
+      let ridgeProf = DAY_PROF, nightProf = NIGHT_PROF, landTop = 0, landH = 0, landW = 0, footerW = 0;
+      const N = 20, plants = [];
+
       function buildRidge(img, requireDark) {
         try {
           const W = img.naturalWidth, H = img.naturalHeight;
@@ -643,68 +644,35 @@ function initGarden() {
         } catch (e) { return null; }
       }
       function refreshLand() {
+        if (!landImg) return;
         const lr = landImg.getBoundingClientRect();
         const fr = footer.getBoundingClientRect();
-        landH = lr.height; landW = lr.width;              // land scales with the viewport (100vw / 150% / 340%)
-        footerW = fr.width;
-        // measured, not assumed: phones lift the land off the footer bottom (see
-        // .ft-land `bottom` in the ≤640 block) so the ground strip has clean room
+        landH = lr.height || 221; landW = lr.width || window.innerWidth;
+        footerW = fr.width || window.innerWidth;
         landTop = lr.top - fr.top;
       }
-      // the land is centred and can be wider than the footer, so remap a footer-x
-      // fraction onto the actual land-image column before sampling the ridge
       function imgFrac(xf) {
         if (!landW) return clamp(xf, 0, 1);
         return clamp(0.5 + (clamp(xf, 0, 1) - 0.5) * (footerW / landW), 0, 1);
       }
       function ridgeFrac(xf) {
-        // compact night uses the profile sampled from the night art (the day
-        // profile put roots in the night sky); desktop keeps the day profile
-        const prof = (compactMQ.matches && document.body.classList.contains('night') && nightProf) || ridgeProf;
-        if (!prof) return 0.42;
+        const isNight = document.body.classList.contains('night');
+        const prof = (isNight && nightProf) || ridgeProf || DAY_PROF;
         const t = imgFrac(xf) * (prof.length - 1), i = t | 0, f = t - i;
         return prof[i] * (1 - f) + prof[Math.min(prof.length - 1, i + 1)] * f;
       }
-      // footer-y of the soil at fraction xf (nudged a touch below the ridge so stems look planted)
       function soilY(xf) { return landTop + ridgeFrac(xf) * landH + 7; }
-      // rooting point for a plant: depthPx (0 = on the ridge) sinks the base that
-      // many px INTO the ground below its own column's ridge — never above it (no
-      // floating roots) and never into the bottom-bar strip (socials + credit)
-      // phones add a 176px ground strip (.footer::after) under the bar — keep the
-      // sunken roots above its opaque zone so the garden reads planted, not dipped
-      // in the dark band
       const BAR_RESERVE = phoneMQ.matches ? 196 : 96;
       function plantY(xf, depthPx) {
         const soil = soilY(xf);
         if (!depthPx) return soil;
         return Math.max(soil, Math.min(soil + depthPx, footer.clientHeight - BAR_RESERVE));
       }
-      ridgeProf = buildRidge(landImg, true);
-      refreshLand();
-      // the night meadow art (swapped in via `body.night .ft-land` in index.html)
-      // has its own ridge line — sample it so night roots land on IT. Sampled
-      // lazily on the first night switch: the PNG is 1.2MB and a day-mode visitor
-      // should never download it just for ridge geometry (at night the CSS swap
-      // fetches it anyway, so the Image() here rides the same cache entry).
-      let nightImgStarted = false;
-      function ensureNightProf() {
-        if (nightImgStarted) return;
-        nightImgStarted = true;
-        const nightImg = new Image();
-        nightImg.addEventListener('load', () => { nightProf = buildRidge(nightImg, false); reroot(); });
-        nightImg.src = '/assets/land meadow-night.png';
-      }
-      if (document.body.classList.contains('night')) ensureNightProf();
-      else {
-        const nightWatch = new MutationObserver(() => {
-          if (document.body.classList.contains('night')) { ensureNightProf(); nightWatch.disconnect(); }
-        });
-        nightWatch.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-      }
 
-      // ---- populate the garden in a few tight clumps ----
-      const N = 20, plants = [];
-      const nc = 5 + ((Math.random() * 2) | 0);            // 5–6 clumps along the ridge
+      refreshLand();
+
+      // ---- populate the garden in clumps ----
+      const nc = 5 + ((Math.random() * 2) | 0);
       const centers = [];
       for (let c = 0; c < nc; c++) centers.push(clamp((c + 0.5) / nc * 100 + rnd(-5, 5), 7, 93));
       for (let i = 0; i < N; i++) {
@@ -712,19 +680,14 @@ function initGarden() {
         const built = roll < 0.5 ? buildDaisy() : roll < 0.78 ? buildLavender() : buildFoliage();
         const el = document.createElement('div');
         el.className = 'plant';
-        const xPct = clamp(centers[i % nc] + rnd(-6, 6), 2, 98);   // bunched tight around a clump centre
-        // compact layouts: every base sinks 4–28px below its column's ridge (deeper
-        // = painted in front), so stems visibly emerge FROM the dark ground and
-        // garden + land read as one element, not a row hovering on a strip
+        const xPct = clamp(centers[i % nc] + rnd(-6, 6), 2, 98);
         const depthPx = compactMQ.matches ? rnd(4, 28) : 0;
         const baseY = plantY(xPct / 100, depthPx);
         el.style.left = xPct + '%';
-        el.style.bottom = (footer.clientHeight - baseY).toFixed(1) + 'px';   // rooted in the soil
+        el.style.bottom = (footer.clientHeight - baseY).toFixed(1) + 'px';
         el.style.zIndex = String(1 + ((Math.random() * 2) | 0) + Math.round(depthPx / 12));
-        // phones: start smaller so the bed stays proportionate to the shorter meadow
         const g0 = phoneMQ.matches ? rnd(0.4, 0.7) : rnd(0.55, 0.95);
         el.style.setProperty('--g', g0.toFixed(3));
-        // sway lives on a wrapper div (composited) so the paint filter stays static
         const stalk = document.createElement('div');
         stalk.className = 'sway';
         stalk.style.cssText = `--swayA:${rnd(1.4, 3.4).toFixed(1)}deg;--sway:${rnd(4, 7).toFixed(1)}s;--sway-d:${rnd(-3, 0).toFixed(1)}s`;
@@ -734,10 +697,46 @@ function initGarden() {
         plants.push({ el, g: g0, max: 1.75, fullH: built.h, xPct, baseY, depthPx });
       }
 
-      // keep the whole garden bed glued to the ridge at every viewport size
       function reroot() {
-        plants.forEach(pl => { pl.baseY = plantY(pl.xPct / 100, pl.depthPx); pl.el.style.bottom = (footer.clientHeight - pl.baseY).toFixed(1) + 'px'; });
+        if (!plants.length) return;
+        plants.forEach(pl => {
+          pl.baseY = plantY(pl.xPct / 100, pl.depthPx);
+          pl.el.style.bottom = (footer.clientHeight - pl.baseY).toFixed(1) + 'px';
+        });
       }
+
+      let nightImgStarted = false;
+      function ensureNightProf() {
+        if (nightImgStarted) return;
+        nightImgStarted = true;
+        const nightImg = new Image();
+        nightImg.addEventListener('load', () => {
+          const sampled = buildRidge(nightImg, false);
+          if (sampled) nightProf = sampled;
+          refreshLand();
+          reroot();
+        });
+        nightImg.src = '/assets/land meadow-night.png';
+      }
+
+      function syncMeadowTheme() {
+        const isNight = document.body.classList.contains('night');
+        if (landImg) {
+          const targetSrc = isNight ? '/assets/land meadow-night.png' : '/assets/footer-land.png';
+          if (!landImg.src.includes(encodeURI(targetSrc))) {
+            landImg.src = targetSrc;
+          }
+        }
+        if (isNight) ensureNightProf();
+        refreshLand();
+        reroot();
+      }
+
+      if (document.body.classList.contains('night')) syncMeadowTheme();
+      const nightWatch = new MutationObserver(() => {
+        syncMeadowTheme();
+      });
+      nightWatch.observe(document.body, { attributes: true, attributeFilter: ['class'] });
       let rz = 0;
       function relayout() {
         if (rz) return;
