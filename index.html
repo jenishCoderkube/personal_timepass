@@ -195,6 +195,18 @@
     </div>
     <p class="pl-line">Loading…</p>
   </div>
+  <script>
+    /* Safety fallback: ensure loader always dismisses even if an asset is slow */
+    setTimeout(function () {
+      var pl = document.getElementById('page-loader');
+      if (pl && !pl.classList.contains('is-hiding')) {
+        pl.classList.add('is-hiding');
+        document.documentElement.classList.remove('pl-lock');
+        document.body.classList.remove('pl-lock');
+        setTimeout(function () { pl.style.display = 'none'; }, 420);
+      }
+    }, 2200);
+  </script>
 
   <!-- ════ ROUTE CURTAIN — two panes (each 100vw × 50vh) close to cover the
        outgoing page, the route swaps hidden behind them, then they open
