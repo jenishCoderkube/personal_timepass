@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "node api.js && vite",
     "build": "vite build",
-    "sync-content": "node -e \"const fs=require('fs'); const j=fs.readFileSync('data/siteContent.json','utf8'); fs.writeFileSync('data/siteContent.js', '/* ── Auto-generated from siteContent.json ── */\\nwindow.SITE_CONTENT = ' + j + ';\\n'); console.log('Synced siteContent.json -> data/siteContent.js');\""
+    "sync-content": "node -e \"const fs=require('fs'); const j=fs.readFileSync('data/siteContent.json','utf8'); fs.writeFileSync('data/siteContent.js', '/* \u2500\u2500 Auto-generated from siteContent.json \u2500\u2500 */\\nwindow.SITE_CONTENT = ' + j + ';\\n'); console.log('Synced siteContent.json -> data/siteContent.js');\""
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",
