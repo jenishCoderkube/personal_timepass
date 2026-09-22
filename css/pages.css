@@ -1046,8 +1046,14 @@
       .tile-overlay-subtitle { font-size: clamp(15px, 2.2vw, 19px); letter-spacing: -0.4px; }
 
       /* ── testimonials responsive — reflow the 1440 canvas into one column ── */
+      /* pause willow animations on tablet/mobile to prevent continuous GPU backdrop re-filtering */
+      .t-willow-sway,
+      .t-willow-skin {
+        animation: none !important;
+        will-change: auto !important;
+      }
       .testimonials {
-        position: relative;          /* JS re-pins it (sticky, bottom-anchored) */
+        position: relative;
         top: auto;
         height: auto;
         /* cover the pinned work section at LARGE viewport height (toolbar
@@ -1300,15 +1306,23 @@
         transform: scale(calc(0.5 + 0.5 * var(--reveal)));
         transform-origin: center center;
         opacity: calc(0.35 + 0.65 * var(--reveal));
-        will-change: transform, opacity;
+        will-change: auto;
       }
 
       /* ── testimonials mobile ── */
       .testimonials { padding-top: 84px; }
       .t-heading { font-size: clamp(30px, 8vw, 40px); letter-spacing: -1.2px; margin-bottom: 28px; }
-      /* lighter glass blur on phones — blur(45px) over the pinned deck is a heavy
-         per-frame repaint that makes the scroll stutter; 18px still reads as glass. */
-      .t-card { padding: 28px; border-radius: 28px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+      /* lighter glass blur on phones — 8px blur with solid tint is silky smooth without GPU throttling */
+      .t-card {
+        padding: 28px;
+        border-radius: 28px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background: rgba(255, 255, 255, 0.88);
+      }
+      body.night .t-card {
+        background: rgba(20, 20, 30, 0.88);
+      }
       .t-name { font-size: 22px; }
       .t-role { font-size: 17px; }
       .t-arrows { gap: 44px; }

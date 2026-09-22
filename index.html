@@ -5157,6 +5157,13 @@
       // scroll frame entirely
       let heroH = 0, lastScale = null;
       function updateHeroScale() {
+        if (Scroll.vw() <= 640 || reflowMQ.matches) {
+          if (lastScale !== 'none') {
+            heroContent.style.transform = '';
+            lastScale = 'none';
+          }
+          return;
+        }
         if (!heroH) heroH = heroEl.offsetHeight;
         const progress = Math.min(Math.max(Scroll.y() / (heroH * 0.8), 0), 1);
         const eased = 1 - Math.pow(1 - progress, 3);
@@ -5259,6 +5266,10 @@
       // Because it's tied to scroll position (not a timer), the reveal can't be
       // outrun — and it scrolls seamlessly with the page (no pin).
       function apply() {
+        if (lastShown !== null && lastShown >= lines.length) {
+          const top = Scroll.rect(container).top;
+          if (top < Scroll.vh() * 0.32) return; // fully scrolled past and all visible
+        }
         const vh = Scroll.vh();
         const top = Scroll.rect(container).top;
         const start = vh * 0.88;   // progress 0: blurb top low on screen
@@ -5574,6 +5585,7 @@
 
       let lastMd = null, lastAppear = null, lastFade = 1;
       function update() {
+        if (window.innerWidth <= 1100 || (fly && fly.offsetParent === null)) return;
         const sk = Scroll.rect(sky);
         const vh = Scroll.vh();
         // Don't show the plane on first load: only reveal it once the user starts
@@ -5639,6 +5651,7 @@
           `translate(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px) translate(-50%, -50%) rotate(${ang + PLANE_OFFSET}deg)`;
       }
       function rebuild() {
+        if (window.innerWidth <= 1100) return;
         // Skip while the section is hidden (e.g. the #about route sets it to
         // display:none): zero-size rects would overwrite the good geometry with a
         // collapsed path. Keep the last valid build until the section is shown again.
@@ -5693,14 +5706,14 @@
       let lastPinTop = null, lastFwTop = null;
       function setPin() {
         lastPinTop = lastFwTop = null;   // this rewrites `top` itself; don't let the dedupe skip the next sync
-        if (reduce) {
-          fw.style.position = 'relative';   // no pin under reduced-motion
+        if (reduce || !desktop.matches) {
+          fw.style.position = 'relative';   // no pin under reduced-motion or on mobile (keeps smooth natural scroll)
           fw.style.top = 'auto';
           fw.style.transform = '';
           shade.style.opacity = '0';
-          testi.style.marginTop = '';
-          testi.style.position = '';
-          testi.style.top = '';
+          testi.style.marginTop = '0';
+          testi.style.position = 'relative';
+          testi.style.top = 'auto';
           testi.style.bottom = '';
           mobilePinned = false;
           return;
@@ -5712,46 +5725,21 @@
         const vh = window.innerHeight;
         fwH = fw.offsetHeight;   // cached so repinMobile() can re-sync without a reflow
         fw.style.top = Math.min(0, vh - fwH) + 'px';
-        if (desktop.matches) {
-          // Desktop: testimonials pins via its own CSS (sticky top:0). Hold the
-          // pinned work section until the plane has finished, THEN let the
-          // testimonials slide over it. The work section pins when its bottom hits
-          // the viewport bottom; we push the testimonials down so it doesn't enter
-          // until the plane's completion scroll (+ a small buffer) — the held screen
-          // (tiles + the plane landing) stays put through the gap, then the green
-          // slides up over it.
-          testi.style.position = '';
-          testi.style.top = '';
-          testi.style.bottom = '';
-          mobilePinned = false;
-          const planeEnd = window.__planeEndScroll || 0;
-          const testiNaturalTop = fw.offsetTop + fw.offsetHeight;   // flow top w/o margin
-          const margin = Math.max(0, planeEnd + PLANE_BUFFER + vh - testiNaturalTop);
-          testi.style.marginTop = margin + 'px';
-        } else {
-          // Mobile: no plane hold. Bottom-pin the testimonials the same way the
-          // work section is pinned, so the footer (z:12) slides up over it —
-          // the full layered reveal: work → testimonials → footer. The `top` is
-          // kept in sync with the LIVE innerHeight by repinMobile() on scroll, so
-          // the iOS toolbar showing/hiding can't leave the pinned bottom short of
-          // the viewport bottom (which opened a gap where the blue hero peeked through
-          // above the footer crest). Cache the height so the scroll handler doesn't
-          // reflow every frame.
-          //
-          // HOLD BUFFER: without this the testimonials sit exactly at the viewport
-          // bottom the instant the work section pins, so the last two tiles (which
-          // land at the bottom of the held screen) get wiped by the rising green
-          // before they can be read. Push the testimonials down by ~0.6vh of extra
-          // flow so the pinned work screen holds — the last tiles stay on-screen —
-          // for a comfortable scroll before the green slides up (the mobile analogue
-          // of the desktop PLANE_BUFFER hold).
-          testi.style.marginTop = Math.round(vh * 0.6) + 'px';
-          testi.style.bottom = '';
-          testi.style.position = 'sticky';
-          testiH = testi.offsetHeight;
-          testi.style.top = Math.min(0, vh - testiH) + 'px';
-          mobilePinned = true;
-        }
+        // Desktop: testimonials pins via its own CSS (sticky top:0). Hold the
+        // pinned work section until the plane has finished, THEN let the
+        // testimonials slide over it. The work section pins when its bottom hits
+        // the viewport bottom; we push the testimonials down so it doesn't enter
+        // until the plane's completion scroll (+ a small buffer) — the held screen
+        // (tiles + the plane landing) stays put through the gap, then the green
+        // slides up over it.
+        testi.style.position = '';
+        testi.style.top = '';
+        testi.style.bottom = '';
+        mobilePinned = false;
+        const planeEnd = window.__planeEndScroll || 0;
+        const testiNaturalTop = fw.offsetTop + fw.offsetHeight;   // flow top w/o margin
+        const margin = Math.max(0, planeEnd + PLANE_BUFFER + vh - testiNaturalTop);
+        testi.style.marginTop = margin + 'px';
         recede();
       }
       // As the testimonials section scrolls up over the pinned work section, push
@@ -6051,26 +6039,35 @@
         return;
       }
       const ease = (t) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
+      const lastRowReveals = [];
+      const lastTileReveals = [];
       function upd() {
+        const isMobile = Scroll.vw() <= 640;
         const vh = Scroll.vh();
         const start = vh * 0.95;   // element top here → reveal begins (0)
         const end   = vh * 0.45;   // element top here → fully revealed (1)
-        // Mobile stacks the tiles and bottom-pins the section, so the last tiles never
-        // scroll up past 0.45vh — with the desktop threshold they'd stay half-revealed
-        // (small + faded) at the pinned hold. Complete their reveal higher up the screen
-        // so they're crisp while held.
-        const tileEnd = (Scroll.vw() <= 640) ? vh * 0.68 : end;
-        // ALL reads, THEN all writes. Reading and writing per element inside one loop
-        // means each write dirties layout and the next element's read forces a full
-        // synchronous relayout — six elements here was ~75% of the whole page's forced
-        // reflows per frame. Two passes costs nothing and removes all of them.
-        const rowTops  = rows.map(r => Scroll.rect(r).top);
+        const tileEnd = isMobile ? vh * 0.68 : end;
+
+        if (!isMobile) {
+          const rowTops = rows.map(r => Scroll.rect(r).top);
+          rows.forEach((row, i) => {
+            let p = ease((start - rowTops[i]) / (start - end));
+            p = p < 0 ? 0 : p > 1 ? 1 : p;
+            if (lastRowReveals[i] === undefined || Math.abs(p - lastRowReveals[i]) > 0.005) {
+              lastRowReveals[i] = p;
+              row.style.setProperty('--reveal', p.toFixed(4));
+            }
+          });
+        }
+
         const tileTops = tiles.map(t => Scroll.rect(t).top);
-        rows.forEach((row, i) => {
-          row.style.setProperty('--reveal', ease((start - rowTops[i]) / (start - end)).toFixed(4));
-        });
         tiles.forEach((tile, i) => {
-          tile.style.setProperty('--reveal', ease((start - tileTops[i]) / (start - tileEnd)).toFixed(4));
+          let p = ease((start - tileTops[i]) / (start - tileEnd));
+          p = p < 0 ? 0 : p > 1 ? 1 : p;
+          if (lastTileReveals[i] === undefined || Math.abs(p - lastTileReveals[i]) > 0.005) {
+            lastTileReveals[i] = p;
+            tile.style.setProperty('--reveal', p.toFixed(4));
+          }
         });
       }
       Scroll.add(upd);

@@ -1368,6 +1368,14 @@
         padding: 92px 24px calc(22vw + 92px);  /* bottom reserves meadow + bottom bar */
         text-align: center;
       }
+      /* mobile performance: omit heavy SVG displacement filter and sway on compact screens */
+      .footer [filter*="ft-paint"],
+      .footer g[filter*="ft-paint"] {
+        filter: none !important;
+      }
+      .plant .sway {
+        animation: none !important;
+      }
       .ft-land { width: 150%; height: auto; bottom: 0; }
       .ft-inner {
         position: static;

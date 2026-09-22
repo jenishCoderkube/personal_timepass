@@ -715,6 +715,7 @@ function initNavContrast() {
   window.addEventListener('resize', () => { navRect = null; }, { passive: true });
 
   function update() {
+    if (window.innerWidth <= 820) return;
     const r = navRect || (navRect = nav.getBoundingClientRect());
     if (!r.width) { navRect = null; return; }
     const y = r.top + r.height / 2;
@@ -738,6 +739,7 @@ function initNavContrast() {
   const SAMPLE_MS = 60;
   let lastSample = 0;
   ((Scroll.addRead || Scroll.add))(() => {
+    if (window.innerWidth <= 820) return;
     const now = performance.now();
     if (now - lastSample < SAMPLE_MS) return;
     lastSample = now;
@@ -862,7 +864,8 @@ function initGarden() {
         return g + '</g>';
       }
       function wrap(w, h, inner) {
-        return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><g filter="url(#ft-paint)">${inner}</g></svg>`;
+        const useFilter = !compactMQ.matches && !reduce;
+        return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${useFilter ? `<g filter="url(#ft-paint)">${inner}</g>` : inner}</svg>`;
       }
 
       // daisy — cream petals, orange stippled centre, terracotta stem, olive base fronds
